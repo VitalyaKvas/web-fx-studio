@@ -5,7 +5,10 @@ import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  // GitHub Pages serves project sites at /<repo>/. Dev keeps the root base
+  // so localhost:5173 still works.
+  base: command === 'build' ? '/web-fx-studio/' : '/',
   plugins: [vue(), vueDevTools()],
   resolve: {
     alias: {
@@ -29,4 +32,4 @@ export default defineConfig({
     entries: ['index.html', 'src/**/*.{ts,vue}'],
     include: ['monaco-editor/esm/vs/editor/editor.api'],
   },
-})
+}))
