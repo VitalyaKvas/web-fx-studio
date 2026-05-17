@@ -18,6 +18,7 @@ export type IconName =
   | 'search'
   | 'settings'
   | 'git'
+  | 'sidebar'
 
 interface Props {
   name: IconName
@@ -101,6 +102,10 @@ const sizePx = computed(() => (typeof props.size === 'number' ? `${props.size}px
       <circle cx="6" cy="6" r="2.5" />
       <path d="M6 8.5v7" />
       <path d="M15.5 6H10a3 3 0 0 0-3 3v9" />
+    </template>
+    <template v-else-if="name === 'sidebar'">
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <line x1="9" y1="4" x2="9" y2="20" />
     </template>
   </svg>
 </template>

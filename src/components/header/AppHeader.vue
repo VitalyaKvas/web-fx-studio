@@ -42,6 +42,17 @@ void fmtTimestamp
 <template>
   <header class="header">
     <div class="header-left">
+      <button
+        class="icon-btn sidebar-toggle"
+        type="button"
+        title="Toggle sidebar"
+        aria-label="Toggle sidebar"
+        :aria-pressed="editor.sidebarVisible"
+        :class="{ active: editor.sidebarVisible }"
+        @click="editor.toggleSidebar"
+      >
+        <Icon name="sidebar" :size="14" />
+      </button>
       <div class="brand">
         <span class="brand-mark" aria-hidden="true" />
         <span class="brand-name">Web<span class="accent">FX</span> Studio</span>
@@ -236,6 +247,14 @@ void fmtTimestamp
     color: var(--color-highlight-white);
     background: rgba(255, 255, 255, 0.04);
   }
+  &.active {
+    color: var(--color-accent-blue);
+    background: rgba(33, 126, 255, 0.12);
+  }
+}
+.sidebar-toggle {
+  height: 28px;
+  min-width: 28px;
 }
 
 .spinner {

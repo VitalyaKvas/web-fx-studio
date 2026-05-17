@@ -106,7 +106,11 @@ function escape(s: string): string {
   min-height: 0;
 
   &[data-sidebar='off'] {
-    grid-template-columns: 0 1fr;
+    // Collapse to a single column. `display: none` on the sidebar would remove
+    // it from the grid and shift the workspace into the now-empty first track,
+    // pinning the workspace to its min-content (~391px) instead of giving it
+    // the full row.
+    grid-template-columns: 1fr;
 
     :deep(.sidebar) {
       display: none;
