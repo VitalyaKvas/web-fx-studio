@@ -15,7 +15,15 @@ function rebuild(): void {
     srcdoc.value = ''
     return
   }
-  srcdoc.value = buildIframeSrcdoc(preset.files)
+  // Inject the current runToken as an HTML comment after <head> so srcdoc
+  // differs on every reload — otherwise Vue's diff skips an identical srcdoc,
+  // the iframe never reloads, no "iframe bridge ready" arrives, and the
+  // "compiling…" overlay never clears.
+  const html = buildIframeSrcdoc(preset.files)
+  const marker = `<!-- webfx-reload:${editor.runToken} -->`
+  srcdoc.value = /<head\b[^>]*>/i.test(html)
+    ? html.replace(/(<head\b[^>]*>)/i, `$1${marker}`)
+    : marker + html
 }
 
 function isBridgeMessage(data: unknown): data is IframeBridgeMessage & { __webfx: true } {
