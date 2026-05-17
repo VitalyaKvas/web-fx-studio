@@ -30,6 +30,7 @@ export const useEditorStore = defineStore('editor', () => {
   const errored = ref(false)
   const errorDetails = ref<ErrorDetails | null>(null)
   const layout = ref<WorkspaceLayout>('preview-right')
+  const pipSize = ref({ width: 280, height: 220 })
   const sidebarVisible = ref(true)
   const mobilePane = ref<MobilePane>('editor')
   const showCreateModal = ref(false)
@@ -135,6 +136,10 @@ export const useEditorStore = defineStore('editor', () => {
     layout.value = next
   }
 
+  function setPipSize(width: number, height: number): void {
+    pipSize.value = { width, height }
+  }
+
   function toggleSidebar(): void {
     sidebarVisible.value = !sidebarVisible.value
   }
@@ -203,6 +208,7 @@ export const useEditorStore = defineStore('editor', () => {
     errored,
     errorDetails,
     layout,
+    pipSize,
     sidebarVisible,
     mobilePane,
     showCreateModal,
@@ -219,6 +225,7 @@ export const useEditorStore = defineStore('editor', () => {
     closeTab,
     updateFileContent,
     setLayout,
+    setPipSize,
     toggleSidebar,
     setMobilePane,
     openCreateModal,

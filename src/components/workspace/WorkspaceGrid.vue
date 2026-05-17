@@ -1,11 +1,17 @@
 <script setup lang="ts">
+import { computed, type CSSProperties } from 'vue'
 import { useEditorStore } from '@/stores/editorStore'
 
 const editor = useEditorStore()
+
+const pipVars = computed<CSSProperties>(() => ({
+  ['--pip-w' as string]: `${editor.pipSize.width}px`,
+  ['--pip-h' as string]: `${editor.pipSize.height}px`,
+}))
 </script>
 
 <template>
-  <div class="workspace" :data-layout="editor.layout">
+  <div class="workspace" :data-layout="editor.layout" :style="pipVars">
     <div class="upper">
       <slot name="preview" />
       <div class="editor-pane">
@@ -93,8 +99,8 @@ const editor = useEditorStore()
   position: absolute;
   right: 16px;
   bottom: 16px;
-  width: 280px;
-  height: 220px;
+  width: var(--pip-w, 280px);
+  height: var(--pip-h, 220px);
   border: 1px solid var(--color-border-strong);
   border-radius: var(--radius-lg);
   overflow: hidden;

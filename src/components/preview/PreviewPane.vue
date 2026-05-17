@@ -12,14 +12,75 @@ const statusLabel = computed(() => {
   if (editor.running) return 'BUILDING'
   return 'READY'
 })
+const isPip = computed(() => editor.layout === 'editor-focus')
 
 function onReload(): void {
   editor.runPreview()
+}
+
+// PiP is anchored bottom-right, so dragging the top/left edges grows the
+// pane in the opposite direction the cursor moves.
+const PIP_MIN_W = 200
+const PIP_MIN_H = 160
+
+function clamp(v: number, lo: number, hi: number): number {
+  return Math.max(lo, Math.min(hi, v))
+}
+
+function startResize(axes: 'x' | 'y' | 'both', event: PointerEvent): void {
+  if (!isPip.value) return
+  event.preventDefault()
+  const startX = event.clientX
+  const startY = event.clientY
+  const startW = editor.pipSize.width
+  const startH = editor.pipSize.height
+  const target = event.currentTarget as HTMLElement
+  const maxW = Math.max(PIP_MIN_W, window.innerWidth - 80)
+  const maxH = Math.max(PIP_MIN_H, window.innerHeight - 160)
+  target.setPointerCapture(event.pointerId)
+
+  const onMove = (e: PointerEvent): void => {
+    let w = startW
+    let h = startH
+    if (axes === 'x' || axes === 'both') {
+      w = clamp(startW + (startX - e.clientX), PIP_MIN_W, maxW)
+    }
+    if (axes === 'y' || axes === 'both') {
+      h = clamp(startH + (startY - e.clientY), PIP_MIN_H, maxH)
+    }
+    editor.setPipSize(w, h)
+  }
+  const onEnd = (e: PointerEvent): void => {
+    target.removeEventListener('pointermove', onMove)
+    target.removeEventListener('pointerup', onEnd)
+    target.removeEventListener('pointercancel', onEnd)
+    if (target.hasPointerCapture(e.pointerId)) target.releasePointerCapture(e.pointerId)
+  }
+  target.addEventListener('pointermove', onMove)
+  target.addEventListener('pointerup', onEnd)
+  target.addEventListener('pointercancel', onEnd)
 }
 </script>
 
 <template>
   <section class="preview-pane">
+    <template v-if="isPip">
+      <div
+        class="resize-handle resize-y"
+        title="Resize height"
+        @pointerdown="startResize('y', $event)"
+      />
+      <div
+        class="resize-handle resize-x"
+        title="Resize width"
+        @pointerdown="startResize('x', $event)"
+      />
+      <div
+        class="resize-handle resize-both"
+        title="Resize"
+        @pointerdown="startResize('both', $event)"
+      />
+    </template>
     <div class="pane-header">
       <div class="pane-title">
         <span class="dot" aria-hidden="true">●</span>
@@ -62,6 +123,49 @@ function onReload(): void {
   background: var(--color-midnight-base);
   border-right: 1px solid var(--color-border);
   min-height: 0;
+}
+
+// Resize handles for the floating PiP (only rendered when layout === 'editor-focus').
+// Placed inside the pane because the PiP has `overflow: hidden` for the rounded
+// corner clip — the topmost / leftmost few pixels become the grab strip.
+.resize-handle {
+  position: absolute;
+  z-index: 25;
+  touch-action: none;
+  user-select: none;
+}
+.resize-y {
+  top: 0;
+  left: 14px;
+  right: 0;
+  height: 6px;
+  cursor: ns-resize;
+}
+.resize-x {
+  top: 14px;
+  bottom: 0;
+  left: 0;
+  width: 6px;
+  cursor: ew-resize;
+}
+.resize-both {
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  // Subtle visual cue so the user can find the corner grab spot.
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 4px 8px 8px 4px;
+    border-top: 1px solid var(--color-accent-blue);
+    border-left: 1px solid var(--color-accent-blue);
+    opacity: 0.35;
+  }
+  &:hover::after {
+    opacity: 0.8;
+  }
 }
 .pane-header {
   @include pane-header;
