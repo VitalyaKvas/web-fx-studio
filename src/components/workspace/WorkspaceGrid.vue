@@ -26,15 +26,19 @@ const editor = useEditorStore()
 
 .upper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  // minmax(0, 1fr) (not 1fr) — Monaco caches its widest container size, and
+  // bare 1fr = minmax(auto, 1fr) lets that cached min-content keep the editor
+  // track from shrinking back to 50% after leaving editor-focus.
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   min-height: 0;
   border-bottom: 1px solid var(--color-border);
 }
 
 .editor-pane {
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 200px minmax(0, 1fr);
   min-height: 0;
+  min-width: 0;
   background: var(--color-graphite-surface);
 }
 
@@ -71,6 +75,19 @@ const editor = useEditorStore()
 .workspace[data-layout='editor-focus'] .upper {
   grid-template-columns: 1fr;
   position: relative;
+}
+// Chromium does not always re-flow the preview pane when both its
+// `position: absolute` and the parent's `position: relative` drop in the
+// same paint, so leaving editor-focus would strand the PiP off-screen.
+.workspace:not([data-layout='editor-focus']) :deep(.preview-pane) {
+  position: static;
+  inset: auto;
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  overflow: visible;
+  z-index: auto;
+  box-shadow: none;
 }
 .workspace[data-layout='editor-focus'] :deep(.preview-pane) {
   position: absolute;
