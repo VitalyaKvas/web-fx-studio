@@ -207,8 +207,17 @@ const HOUDINI_SCAFFOLD = (): Record<string, FileItem> =>
   <body>
     <div class="stage"></div>
     <script>
+      // Worklet loaders bypass window.fetch overrides, so we materialise the
+      // worklet source as a Blob URL before handing it to addModule().
       if ('paintWorklet' in CSS) {
-        CSS.paintWorklet.addModule('./worklet.js');
+        fetch('./worklet.js')
+          .then(function (r) { return r.text(); })
+          .then(function (src) {
+            var blob = new Blob([src], { type: 'application/javascript' });
+            return CSS.paintWorklet.addModule(URL.createObjectURL(blob));
+          })
+          .then(function () { console.log('Paint Worklet registered'); })
+          .catch(function (e) { console.error('Worklet registration failed: ' + (e && e.message ? e.message : e)); });
       } else {
         console.warn('CSS Paint Worklet unavailable in this browser');
       }

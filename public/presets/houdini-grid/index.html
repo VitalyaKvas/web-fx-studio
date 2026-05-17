@@ -11,15 +11,26 @@
       <div class="hint">Tweak <code>--grid-density</code> and <code>--hue</code> in style.css</div>
     </div>
     <script>
-      // CSS Paint Worklet registration must run in the host page.
+      // CSS Paint Worklet's addModule() uses the browser's worklet resource
+      // loader, which bypasses any window.fetch override (including the one
+      // WebFX Studio injects to back the virtual filesystem). So we fetch the
+      // source ourselves through fetch() (which the host's bridge intercepts)
+      // and hand addModule a Blob URL it can resolve normally.
       if ('paintWorklet' in CSS) {
-        CSS.paintWorklet
-          .addModule('./grid.worklet.js')
+        fetch('./grid.worklet.js')
+          .then(function (r) {
+            return r.text();
+          })
+          .then(function (src) {
+            var blob = new Blob([src], { type: 'application/javascript' });
+            var url = URL.createObjectURL(blob);
+            return CSS.paintWorklet.addModule(url);
+          })
           .then(function () {
             console.log('Houdini Paint Worklet registered: grid');
           })
           .catch(function (e) {
-            console.error('Worklet registration failed: ' + e);
+            console.error('Worklet registration failed: ' + (e && e.message ? e.message : e));
           });
       } else {
         console.warn('CSS Paint Worklet is not supported in this browser.');
