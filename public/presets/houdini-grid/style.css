@@ -1,0 +1,60 @@
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #06060a;
+  color: #fafafa;
+  font-family: 'JetBrains Mono', ui-monospace, monospace;
+  overflow: hidden;
+}
+
+@property --glow-r {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+.stage {
+  width: 100vw;
+  height: 100vh;
+  --grid-density: 28;
+  --hue: 220;
+  --glow-r: 0;
+  background-image: paint(grid);
+  animation: pulse 6s ease-in-out infinite;
+  display: grid;
+  place-items: end center;
+  padding: 24px;
+}
+
+.no-worklet .stage {
+  background: repeating-linear-gradient(0deg, #14141a 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(90deg, #14141a 0 1px, transparent 1px 24px), #06060a;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    --glow-r: 0;
+    --hue: 220;
+  }
+  50% {
+    --glow-r: 120;
+    --hue: 260;
+  }
+}
+
+.title {
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+.hint {
+  font-size: 12px;
+  color: #868684;
+
+  code {
+    color: #bd9f65;
+  }
+}

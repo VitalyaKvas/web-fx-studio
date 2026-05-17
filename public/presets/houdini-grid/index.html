@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Houdini Grid Paint</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="stage">
+      <div class="title">CSS Paint Worklet</div>
+      <div class="hint">Tweak <code>--grid-density</code> and <code>--hue</code> in style.css</div>
+    </div>
+    <script>
+      // CSS Paint Worklet registration must run in the host page.
+      if ('paintWorklet' in CSS) {
+        CSS.paintWorklet
+          .addModule('./grid.worklet.js')
+          .then(function () {
+            console.log('Houdini Paint Worklet registered: grid');
+          })
+          .catch(function (e) {
+            console.error('Worklet registration failed: ' + e);
+          });
+      } else {
+        console.warn('CSS Paint Worklet is not supported in this browser.');
+        document.body.classList.add('no-worklet');
+      }
+    </script>
+  </body>
+</html>

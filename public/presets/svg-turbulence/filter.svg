@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <filter id="turb-strong">
+    <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="2" />
+    <feDisplacementMap in="SourceGraphic" scale="36" />
+  </filter>
+  <filter id="turb-soft">
+    <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" />
+    <feDisplacementMap in="SourceGraphic" scale="10" />
+  </filter>
+</svg>

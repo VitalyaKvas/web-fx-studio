@@ -1,0 +1,35 @@
+{
+  "$schema": "https://webfx.studio/presets-manifest.schema.json",
+  "presets": [
+    {
+      "id": "glsl-blur",
+      "name": "GLSL Blur",
+      "type": "webgl",
+      "files": ["index.html", "main.js", "shader.frag"]
+    },
+    {
+      "id": "wgsl-waves",
+      "name": "WGSL Waves",
+      "type": "webgpu",
+      "files": ["index.html", "main.js", "waves.wgsl"]
+    },
+    {
+      "id": "houdini-grid",
+      "name": "Houdini Grid Paint",
+      "type": "houdini",
+      "files": ["index.html", "grid.worklet.js", "style.css"]
+    },
+    {
+      "id": "svg-turbulence",
+      "name": "SVG Turbulence",
+      "type": "svg",
+      "files": ["index.html", "filter.svg"]
+    },
+    {
+      "id": "three-orbit",
+      "name": "Three.js Orbit",
+      "type": "threejs",
+      "files": ["index.html", "scene.js"]
+    }
+  ]
+}
