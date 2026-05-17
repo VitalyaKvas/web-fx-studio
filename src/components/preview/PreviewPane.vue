@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import Icon from '@/components/shared/Icon.vue'
 import { useEditorStore } from '@/stores/editorStore'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import ErrorOverlay from './ErrorOverlay.vue'
 import IframeRenderer from './IframeRenderer.vue'
+
+type PreviewScale = '1x' | '2x' | 'fit'
 
 const editor = useEditorStore()
 const presetName = computed(() => editor.currentPreset?.name ?? '—')
@@ -13,6 +15,16 @@ const statusLabel = computed(() => {
   return 'READY'
 })
 const isPip = computed(() => editor.layout === 'editor-focus')
+
+const previewScale = ref<PreviewScale>('1x')
+function setScale(s: PreviewScale): void {
+  previewScale.value = s
+}
+const sizeLabel = computed(() => {
+  if (previewScale.value === '2x') return '1040 × 1040'
+  if (previewScale.value === 'fit') return 'Fit'
+  return '520 × 520'
+})
 
 function onReload(): void {
   editor.runPreview()
@@ -87,16 +99,37 @@ function startResize(axes: 'x' | 'y' | 'both', event: PointerEvent): void {
         Preview
       </div>
       <div class="pane-actions">
-        <button type="button" class="icon-btn active" title="100% scale">1×</button>
-        <button type="button" class="icon-btn" title="200% scale">2×</button>
-        <button type="button" class="icon-btn" title="Fit to pane">FIT</button>
+        <button
+          type="button"
+          :class="['icon-btn', { active: previewScale === '1x' }]"
+          title="100% scale"
+          @click="setScale('1x')"
+        >
+          1×
+        </button>
+        <button
+          type="button"
+          :class="['icon-btn', { active: previewScale === '2x' }]"
+          title="200% scale"
+          @click="setScale('2x')"
+        >
+          2×
+        </button>
+        <button
+          type="button"
+          :class="['icon-btn', { active: previewScale === 'fit' }]"
+          title="Fit to pane"
+          @click="setScale('fit')"
+        >
+          FIT
+        </button>
         <button type="button" class="icon-btn" title="Reload preview" @click="onReload">
           <Icon name="refresh" :size="12" />
         </button>
       </div>
     </div>
     <div class="preview-stage">
-      <div :class="['preview-canvas', { flash: editor.running }]">
+      <div :class="['preview-canvas', `scale-${previewScale}`, { flash: editor.running }]">
         <IframeRenderer />
         <ErrorOverlay />
         <div v-if="editor.running && !editor.errored" class="building-overlay">
@@ -111,7 +144,7 @@ function startResize(axes: 'x' | 'y' | 'both', event: PointerEvent): void {
         <span :class="editor.errored ? 'status-bad' : 'status-good'">{{ statusLabel }}</span>
         <span class="muted">{{ presetName }}</span>
       </span>
-      <span class="muted">520 × 520 · iframe · sandbox</span>
+      <span class="muted">{{ sizeLabel }} · iframe · sandbox</span>
     </div>
   </section>
 </template>
@@ -224,14 +257,25 @@ function startResize(axes: 'x' | 'y' | 'both', event: PointerEvent): void {
   position: relative;
   width: 100%;
   height: 100%;
-  max-width: 560px;
-  max-height: 560px;
   aspect-ratio: 1 / 1;
   border-radius: var(--radius-lg);
   overflow: hidden;
   background: #0a0a0a;
   border: 1px solid rgba(33, 126, 255, 0.25);
   box-shadow: var(--shadow-xl);
+
+  &.scale-1x {
+    max-width: 520px;
+    max-height: 520px;
+  }
+  &.scale-2x {
+    max-width: 1040px;
+    max-height: 1040px;
+  }
+  &.scale-fit {
+    max-width: none;
+    max-height: none;
+  }
 }
 .flash {
   animation: flash 700ms ease-out;
