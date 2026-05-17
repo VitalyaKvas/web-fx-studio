@@ -1,13 +1,14 @@
 import type { FileLanguage } from '@/types'
 
-// Monaco has no first-party GLSL/WGSL language pack; fall back to plaintext for
-// those until a community grammar gets wired in. svg maps to xml for tag coloring.
+// WGSL ships with monaco-editor and is auto-registered by its contribution
+// module. GLSL is registered in `monacoSetup.ts` (Monarch grammar — Monaco has
+// no first-party GLSL pack). svg maps to xml for tag coloring.
 const LANG_MAP: Record<FileLanguage, string> = {
   html: 'html',
   javascript: 'javascript',
   typescript: 'typescript',
-  glsl: 'plaintext',
-  wgsl: 'plaintext',
+  glsl: 'glsl',
+  wgsl: 'wgsl',
   css: 'css',
   json: 'json',
   svg: 'xml',
