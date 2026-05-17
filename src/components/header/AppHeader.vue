@@ -57,13 +57,6 @@ void fmtTimestamp
     <div class="header-right">
       <LayoutSwitcher :value="editor.layout" @change="editor.setLayout" />
       <div class="brand-divider" />
-      <button class="icon-btn" type="button" title="Search files" aria-label="Search files">
-        <Icon name="search" :size="14" />
-      </button>
-      <button class="icon-btn" type="button" title="Settings" aria-label="Settings">
-        <Icon name="settings" :size="14" />
-      </button>
-      <div class="brand-divider" />
       <button
         class="btn btn-ghost"
         type="button"
