@@ -1,10 +1,13 @@
 import type { FileItem, Preset, PresetManifest, PresetManifestEntry } from '@/types'
 import { inferLanguage } from './slug'
 
-const MANIFEST_URL = '/presets/presets-manifest.json'
+// Vite sets BASE_URL to '/' in dev and to the configured base in build
+// (e.g. '/web-fx-studio/' for GitHub Pages). Always ends with a trailing slash.
+const BASE = import.meta.env.BASE_URL
+const MANIFEST_URL = `${BASE}presets/presets-manifest.json`
 
 async function fetchPresetFile(presetId: string, fileName: string): Promise<FileItem> {
-  const url = `/presets/${presetId}/${fileName}`
+  const url = `${BASE}presets/${presetId}/${fileName}`
   const res = await fetch(url)
   if (!res.ok) {
     throw new Error(`Failed to load ${url}: ${res.status} ${res.statusText}`)
