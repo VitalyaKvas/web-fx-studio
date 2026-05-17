@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useEditorStore } from '@/stores/editorStore'
-import IframeRenderer from './IframeRenderer.vue'
-import ErrorOverlay from './ErrorOverlay.vue'
 import Icon from '@/components/shared/Icon.vue'
+import { useEditorStore } from '@/stores/editorStore'
+import { computed } from 'vue'
+import ErrorOverlay from './ErrorOverlay.vue'
+import IframeRenderer from './IframeRenderer.vue'
 
 const editor = useEditorStore()
 const presetName = computed(() => editor.currentPreset?.name ?? '—')
@@ -23,7 +23,7 @@ function onReload(): void {
     <div class="pane-header">
       <div class="pane-title">
         <span class="dot" aria-hidden="true">●</span>
-        Preview · iframe
+        Preview
       </div>
       <div class="pane-actions">
         <button type="button" class="icon-btn active" title="100% scale">1×</button>
