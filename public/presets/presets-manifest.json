@@ -26,6 +26,18 @@
       "files": ["index.html", "main.js", "shader.wgsl"]
     },
     {
+      "id": "webgl-banded-swirl",
+      "name": "BandedSwirl (GLSL)",
+      "type": "webgl",
+      "files": ["index.html", "main.js", "shader.frag"]
+    },
+    {
+      "id": "webgpu-banded-swirl",
+      "name": "BandedSwirl (WGSL)",
+      "type": "webgpu",
+      "files": ["index.html", "main.js", "shader.wgsl"]
+    },
+    {
       "id": "houdini-grid",
       "name": "Houdini Grid Paint",
       "type": "houdini",

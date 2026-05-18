@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BandedSwirl — WebGPU / WGSL</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #06070a;
+        overflow: hidden;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        color: #d8dbe2;
+      }
+      canvas {
+        display: block;
+        width: 100vw;
+        height: 100vh;
+      }
+      .panel {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        width: 240px;
+        background: rgba(14, 16, 22, 0.86);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        backdrop-filter: blur(8px);
+        font-size: 12px;
+        line-height: 1.4;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        user-select: none;
+      }
+      .panel__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 10px 8px 12px;
+        cursor: grab;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .panel__head:active {
+        cursor: grabbing;
+      }
+      .panel.is-dragging {
+        cursor: grabbing;
+      }
+      .panel__title {
+        margin: 0;
+        font-size: 11px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #8aa0ff;
+        pointer-events: none;
+      }
+      .panel__toggle {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #d8dbe2;
+        width: 22px;
+        height: 22px;
+        line-height: 1;
+        padding: 0;
+        border-radius: 4px;
+        font: inherit;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+      }
+      .panel__toggle:hover {
+        background: rgba(255, 255, 255, 0.06);
+      }
+      .panel__toggle:focus-visible {
+        outline: 2px solid #8aa0ff;
+        outline-offset: 1px;
+      }
+      .panel__body {
+        padding: 10px 14px 12px;
+      }
+      .panel.is-collapsed .panel__body {
+        display: none;
+      }
+      .panel.is-collapsed .panel__head {
+        border-bottom: none;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 6px 8px;
+        margin: 6px 0;
+      }
+      .row label {
+        color: #aab0bd;
+      }
+      .row output {
+        color: #d8dbe2;
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+        min-width: 3ch;
+      }
+      .row input[type='range'] {
+        grid-column: 1 / -1;
+        width: 100%;
+        accent-color: #217eff;
+      }
+      .fallback {
+        position: fixed;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        color: #ff8b95;
+        text-align: center;
+        padding: 24px;
+        line-height: 1.6;
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="stage"></canvas>
+    <div id="panel" class="panel" aria-label="BandedSwirl parameters">
+      <div id="panelHead" class="panel__head">
+        <h1 class="panel__title">BandedSwirl · WGSL</h1>
+        <button
+          id="panelToggle"
+          class="panel__toggle"
+          type="button"
+          aria-expanded="true"
+          aria-controls="panelBody"
+          aria-label="Collapse panel"
+        >−</button>
+      </div>
+      <div id="panelBody" class="panel__body">
+        <div class="row">
+          <label for="centerX">centerX</label>
+          <output id="centerXValue">0.50</output>
+          <input id="centerX" type="range" min="0" max="1" step="0.01" value="0.5" />
+        </div>
+        <div class="row">
+          <label for="centerY">centerY</label>
+          <output id="centerYValue">0.50</output>
+          <input id="centerY" type="range" min="0" max="1" step="0.01" value="0.5" />
+        </div>
+        <div class="row">
+          <label for="bands">bands</label>
+          <output id="bandsValue">10.00</output>
+          <input id="bands" type="range" min="0" max="20" step="0.1" value="10" />
+        </div>
+        <div class="row">
+          <label for="strength">strength</label>
+          <output id="strengthValue">0.50</output>
+          <input id="strength" type="range" min="0" max="1" step="0.01" value="0.5" />
+        </div>
+        <div class="row">
+          <label for="aspectRatio">aspectRatio</label>
+          <output id="aspectRatioValue">1.00</output>
+          <input id="aspectRatio" type="range" min="0.5" max="2" step="0.01" value="1" />
+        </div>
+      </div>
+    </div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
