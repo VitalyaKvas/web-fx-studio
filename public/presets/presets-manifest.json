@@ -14,6 +14,18 @@
       "files": ["index.html", "main.js", "waves.wgsl"]
     },
     {
+      "id": "webgl-apply-texture",
+      "name": "ApplyTexture (GLSL)",
+      "type": "webgl",
+      "files": ["index.html", "main.js", "shader.frag"]
+    },
+    {
+      "id": "webgpu-apply-texture",
+      "name": "ApplyTexture (WGSL)",
+      "type": "webgpu",
+      "files": ["index.html", "main.js", "shader.wgsl"]
+    },
+    {
       "id": "houdini-grid",
       "name": "Houdini Grid Paint",
       "type": "houdini",
