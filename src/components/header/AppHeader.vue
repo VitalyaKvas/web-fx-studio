@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useEditorStore } from '@/stores/editorStore'
-import { exportPresetAsZip } from '@/utils/zipExport'
-import { fmtTimestamp } from '@/utils/slug'
 import Icon from '@/components/shared/Icon.vue'
 import KbdHint from '@/components/shared/KbdHint.vue'
+import { useEditorStore } from '@/stores/editorStore'
+import { fmtTimestamp } from '@/utils/slug'
+import { exportPresetAsZip } from '@/utils/zipExport'
+import { computed } from 'vue'
 import LayoutSwitcher from './LayoutSwitcher.vue'
 
 const editor = useEditorStore()
@@ -68,6 +68,16 @@ void fmtTimestamp
     <div class="header-right">
       <LayoutSwitcher :value="editor.layout" @change="editor.setLayout" />
       <div class="brand-divider" />
+      <a
+        class="icon-btn github-link"
+        href="https://github.com/VitalyaKvas/web-fx-studio"
+        target="_blank"
+        rel="noopener noreferrer"
+        title="View source on GitHub"
+        aria-label="View source on GitHub"
+      >
+        <Icon name="github" :size="16" />
+      </a>
       <button
         class="btn btn-ghost"
         type="button"
@@ -255,6 +265,11 @@ void fmtTimestamp
 .sidebar-toggle {
   height: 28px;
   min-width: 28px;
+}
+.github-link {
+  height: 28px;
+  min-width: 28px;
+  text-decoration: none;
 }
 
 .spinner {
